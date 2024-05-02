@@ -31,7 +31,6 @@ namespace FurnitureCompanyApp
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGrid1 = new System.Windows.Forms.DataGrid();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -50,7 +49,6 @@ namespace FurnitureCompanyApp
             this.label6 = new System.Windows.Forms.Label();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -59,47 +57,20 @@ namespace FurnitureCompanyApp
             this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
-            // dataGrid1
-            // 
-            this.dataGrid1.AlternatingBackColor = System.Drawing.Color.Lavender;
-            this.dataGrid1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.dataGrid1.BackgroundColor = System.Drawing.Color.LightGray;
-            this.dataGrid1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGrid1.CaptionBackColor = System.Drawing.Color.LightSteelBlue;
-            this.dataGrid1.CaptionFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.dataGrid1.CaptionForeColor = System.Drawing.Color.MidnightBlue;
-            this.dataGrid1.DataMember = "";
-            this.dataGrid1.FlatMode = true;
-            this.dataGrid1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.dataGrid1.ForeColor = System.Drawing.Color.MidnightBlue;
-            this.dataGrid1.GridLineColor = System.Drawing.Color.Gainsboro;
-            this.dataGrid1.GridLineStyle = System.Windows.Forms.DataGridLineStyle.None;
-            this.dataGrid1.HeaderBackColor = System.Drawing.Color.MidnightBlue;
-            this.dataGrid1.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.dataGrid1.HeaderForeColor = System.Drawing.Color.WhiteSmoke;
-            this.dataGrid1.LinkColor = System.Drawing.Color.Teal;
-            this.dataGrid1.Location = new System.Drawing.Point(12, 12);
-            this.dataGrid1.Name = "dataGrid1";
-            this.dataGrid1.ParentRowsBackColor = System.Drawing.Color.Gainsboro;
-            this.dataGrid1.ParentRowsForeColor = System.Drawing.Color.MidnightBlue;
-            this.dataGrid1.SelectionBackColor = System.Drawing.Color.CadetBlue;
-            this.dataGrid1.SelectionForeColor = System.Drawing.Color.WhiteSmoke;
-            this.dataGrid1.Size = new System.Drawing.Size(192, 426);
-            this.dataGrid1.TabIndex = 1;
-            // 
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(596, 12);
+            this.dataGridView1.Location = new System.Drawing.Point(232, 12);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(192, 426);
+            this.dataGridView1.Size = new System.Drawing.Size(556, 426);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(292, 12);
+            this.label1.Location = new System.Drawing.Point(12, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(214, 61);
             this.label1.TabIndex = 2;
@@ -122,7 +93,7 @@ namespace FurnitureCompanyApp
             // 
             this.textBox1.AcceptsTab = true;
             this.textBox1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.textBox1.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.textBox1.ForeColor = System.Drawing.SystemColors.Desktop;
             this.textBox1.Location = new System.Drawing.Point(3, 43);
             this.textBox1.Name = "textBox1";
             this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -136,7 +107,7 @@ namespace FurnitureCompanyApp
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.textBox1);
-            this.panel2.Location = new System.Drawing.Point(292, 76);
+            this.panel2.Location = new System.Drawing.Point(12, 76);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(214, 70);
             this.panel2.TabIndex = 6;
@@ -148,7 +119,7 @@ namespace FurnitureCompanyApp
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.textBox2);
-            this.panel1.Location = new System.Drawing.Point(292, 152);
+            this.panel1.Location = new System.Drawing.Point(12, 152);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(214, 52);
             this.panel1.TabIndex = 7;
@@ -183,7 +154,7 @@ namespace FurnitureCompanyApp
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel3.Controls.Add(this.label4);
             this.panel3.Controls.Add(this.textBox3);
-            this.panel3.Location = new System.Drawing.Point(292, 210);
+            this.panel3.Location = new System.Drawing.Point(12, 210);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(214, 52);
             this.panel3.TabIndex = 8;
@@ -216,7 +187,7 @@ namespace FurnitureCompanyApp
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel4.Controls.Add(this.label5);
             this.panel4.Controls.Add(this.textBox4);
-            this.panel4.Location = new System.Drawing.Point(292, 268);
+            this.panel4.Location = new System.Drawing.Point(12, 268);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(214, 52);
             this.panel4.TabIndex = 9;
@@ -241,6 +212,7 @@ namespace FurnitureCompanyApp
             this.textBox4.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.textBox4.Size = new System.Drawing.Size(204, 20);
             this.textBox4.TabIndex = 5;
+            this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
             // 
             // panel5
             // 
@@ -248,7 +220,7 @@ namespace FurnitureCompanyApp
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel5.Controls.Add(this.label6);
             this.panel5.Controls.Add(this.textBox5);
-            this.panel5.Location = new System.Drawing.Point(292, 326);
+            this.panel5.Location = new System.Drawing.Point(12, 326);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(214, 52);
             this.panel5.TabIndex = 10;
@@ -273,11 +245,12 @@ namespace FurnitureCompanyApp
             this.textBox5.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.textBox5.Size = new System.Drawing.Size(204, 20);
             this.textBox5.TabIndex = 5;
+            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
             // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(353, 384);
+            this.button1.Location = new System.Drawing.Point(73, 384);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(101, 34);
             this.button1.TabIndex = 11;
@@ -298,12 +271,10 @@ namespace FurnitureCompanyApp
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.dataGrid1);
             this.Controls.Add(this.dataGridView1);
             this.Location = new System.Drawing.Point(15, 15);
             this.Name = "ReceiveComponentsForm";
             this.Load += new System.EventHandler(this.ReceiveComponentsForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -341,8 +312,6 @@ namespace FurnitureCompanyApp
         private System.Windows.Forms.Label label2;
 
         private System.Windows.Forms.Label label1;
-
-        private System.Windows.Forms.DataGrid dataGrid1;
 
         private System.Windows.Forms.DataGridView dataGridView1;
 
