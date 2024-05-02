@@ -13,6 +13,8 @@ namespace FurnitureCompanyApp
 {
     public partial class MainForm : Form
     {
+        private NpgsqlConnection Connection { get; set; }
+        
         public MainForm()
         {
             InitializeComponent();
@@ -20,7 +22,13 @@ namespace FurnitureCompanyApp
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            
+            this.StartPosition = FormStartPosition.CenterScreen;
+            Connection = new NpgsqlConnection($"Server={Constants.LocalServer}; " +
+                                              $"Port={Constants.Port}; " + 
+                                              $"UserID={Constants.Userid}; " +
+                                              $"Password={Constants.Password}; " +
+                                              $"Database={Constants.DatabaseName}");
+            Connection.Open();
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -30,7 +38,7 @@ namespace FurnitureCompanyApp
                 switch (e.Node.Text)
                 {
                     case "Заказ компонентов":
-                        ReceiveComponentsForm form = new ReceiveComponentsForm();
+                        ReceiveComponentsForm form = new ReceiveComponentsForm(Connection);
                         form.Show();
                         break;
                     
@@ -50,12 +58,6 @@ namespace FurnitureCompanyApp
                         break;
                 }
             }
-        }
-
-        private void Open_Node4(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            var form = new ReceiveComponentsForm();
-            form.Show();
         }
     }
 }
