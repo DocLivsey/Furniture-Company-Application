@@ -17,5 +17,45 @@ namespace FurnitureCompanyApp
         {
             InitializeComponent();
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.IsSelected)
+            {
+                switch (e.Node.Text)
+                {
+                    case "Заказ компонентов":
+                        ReceiveComponentsForm form = new ReceiveComponentsForm();
+                        form.Show();
+                        break;
+                    
+                    case "Сделанные заказы":
+                        break;
+                    
+                    case "Заказать сборку":
+                        break;
+                    
+                    case "Комплектующие":
+                        break;
+                    
+                    case "Собранная мебель":
+                        break;
+                    
+                    case "Сборка мебели":
+                        break;
+                }
+            }
+        }
+
+        private void Open_Node4(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            var form = new ReceiveComponentsForm();
+            form.Show();
+        }
     }
 }
