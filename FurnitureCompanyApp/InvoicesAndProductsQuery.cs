@@ -10,7 +10,7 @@ namespace FurnitureCompanyApp
             FurnitureComponent product, NpgsqlConnection connection)
         {
             Query = "Insert into invoices_for_components " +
-                    "(invoice_id, component_id) " +
+                    "(invoice_id, _component_id) " +
                     "values (@INVOICE_ID, @COMPONENT_ID)";
             NpgsqlCommand command = new NpgsqlCommand(Query, connection);
             try

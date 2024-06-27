@@ -31,5 +31,28 @@ namespace FurnitureCompanyApp
                 Console.WriteLine(e.Message);
             }
         }
+
+        public static void InsertIntoFurnitureTable(Furniture product, NpgsqlConnection connection)
+        {
+            Query = $"Insert into {Constants.DatabaseTable.FurnitureWarehouseTable} " +
+                    "(furniture_id, scheme_id, furniture_name, amount, result_price) values " +
+                    $"({product.Id}, {product.SchemeId}, '{product.Name}', {product.Amount}, " +
+                    $"{product.ResultPrice.ToString().Replace(',', '.')})";
+            NpgsqlCommand command = new NpgsqlCommand(Query, connection);
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (NpgsqlException e)
+            {
+                MessageBox.Show(
+                    e.Message + "\nErrorCode: " + e.ErrorCode, 
+                    "Ошибка добавления в базу данных",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                Console.WriteLine(e.ErrorCode);
+                Console.WriteLine(e.Message);
+            }
+        }
     }
 }

@@ -11,7 +11,23 @@ namespace FurnitureCompanyApp
         public MainForm()
         {
             InitializeComponent();
-            button1.Visible = false;
+            //button1.Visible = false;
+        }
+        
+        private bool AreAllNodesExpanded(TreeView treeView)
+        {
+            foreach (TreeNode node in treeView.Nodes)
+                if (!node.IsExpanded)
+                    return false;
+            return true;
+        }
+
+        private bool IsAnyNodeExpanded(TreeView treeView)
+        {
+            foreach (TreeNode node in treeView.Nodes)
+                if (node.IsExpanded)
+                    return true;
+            return false;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -38,21 +54,33 @@ namespace FurnitureCompanyApp
                         break;
                     
                     case "Сделанные заказы":
-                        OrderedInvoicesForm form = new OrderedInvoicesForm(Connection);
-                        form.Show();
-                        form.StartPosition = FormStartPosition.CenterScreen;
+                        OrderedInvoicesForm invoicesForm = new OrderedInvoicesForm(Connection);
+                        invoicesForm.Show();
+                        invoicesForm.StartPosition = FormStartPosition.CenterScreen;
                         break;
                     
                     case "Заказать сборку":
+                        AssemblyInvoiceForm assemblyInvoiceForm = new AssemblyInvoiceForm(Connection);
+                        assemblyInvoiceForm.Show();
+                        assemblyInvoiceForm.StartPosition = FormStartPosition.CenterParent;
                         break;
                     
                     case "Комплектующие":
+                        ComponentsInStockForm componentsInStockForm = new ComponentsInStockForm(Connection);
+                        componentsInStockForm.Show();
+                        componentsInStockForm.StartPosition = FormStartPosition.CenterScreen;
                         break;
                     
-                    case "Собранная мебель":
+                    case "Мебель":
+                        FurnitureInStockForm furnitureInStockForm = new FurnitureInStockForm(Connection);
+                        furnitureInStockForm.Show();
+                        furnitureInStockForm.StartPosition = FormStartPosition.CenterParent;
                         break;
                     
                     case "Сборка мебели":
+                        AssemblySchemeForm schemeForm = new AssemblySchemeForm(Connection);
+                        schemeForm.Show();
+                        schemeForm.StartPosition = FormStartPosition.CenterScreen;
                         break;
                 }
             }
@@ -71,8 +99,13 @@ namespace FurnitureCompanyApp
 
         private void treeView1_AfterCollapse(object sender, TreeViewEventArgs e)
         {
-            if (!Program.IsAnyNodeExpanded(treeView1))
+            if (!IsAnyNodeExpanded(treeView1))
                 treeView1.Width = 105;
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

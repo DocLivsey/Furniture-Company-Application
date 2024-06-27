@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using Npgsql;
 
 namespace FurnitureCompanyApp
@@ -55,6 +56,7 @@ namespace FurnitureCompanyApp
                         fieldsTable.Add(field, reader[field]);
                     fieldsTableList.Add(fieldsTable);
                 }
+                reader.Close();
             }
             return fieldsTableList;
         }
@@ -98,10 +100,22 @@ namespace FurnitureCompanyApp
             Console.WriteLine(Query);
         }
 
-        public static void UpdateSelect(string query)
+        public static void DeleteFromTable(string condition, string tableName, NpgsqlConnection connection)
         {
-            Query = query;
-            
+            Query = $"delete from {tableName} where {condition}";
+            try
+            {
+                NpgsqlCommand command = new NpgsqlCommand(Query, connection);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(
+                    e.Message, 
+                    "Ошибка удаления из базы данных",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 }

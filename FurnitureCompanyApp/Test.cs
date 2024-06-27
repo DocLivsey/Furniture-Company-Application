@@ -24,33 +24,20 @@ namespace FurnitureCompanyApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            QueryTools.UpdateTable("receiving_date = 'monday'", "_id = 1",
-                "receiving_invoices", Connection);
-            var map = QueryTools.SelectFromTableWhere("_id", "_id = 1",
-                "receiving_invoices", Connection);
-            foreach (var dict in map)
-                foreach (var pair in dict)
-                    Console.WriteLine(pair);
+            MessageBox.Show($"{dateTimePicker1.Value}, {dateTimePicker1.Text}");
+
+            string today = dateTimePicker1.Text;
+            DateTime todayDate = DateTime.Parse(today);
+
+            MessageBox.Show(todayDate.ToString());
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-            
+            Console.WriteLine(dateTimePicker1.Value);
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            ErrorProvider errorProvider = new ErrorProvider();
-            errorProvider.SetError(button2, "ERROR");
-            errorProvider.SetIconAlignment(button2, ErrorIconAlignment.BottomLeft);
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            
-        }
-        
-        private void button4_Click(object sender, EventArgs e)
+        private void maskedTextBox1_TextChanged(object sender, EventArgs e)
         {
             
         }

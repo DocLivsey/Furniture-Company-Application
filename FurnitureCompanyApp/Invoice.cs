@@ -7,6 +7,12 @@ namespace FurnitureCompanyApp
     public class Invoice
     {
         public int Id;
+
+        public Invoice(int id = -1)
+        {
+            if (id != -1)
+                Id = id;
+        }
     }
 
     public class ReceiveInvoice : Invoice
@@ -18,11 +24,8 @@ namespace FurnitureCompanyApp
         public int ComponentsCount;
 
         public ReceiveInvoice(string orderDate, string receivingDate, double deliveryCost,
-            double manufacturingCost, int componentsCount, int id = -1)
+            double manufacturingCost, int componentsCount, int id = -1) : base(id)
         {
-            if (id != -1)
-                Id = id;
-            
             OrderDate = orderDate;
             ReceivingDate = receivingDate;
             DeliveryCost = deliveryCost;
@@ -45,14 +48,14 @@ namespace FurnitureCompanyApp
         private int GetIdFromDataBase(NpgsqlConnection connection)
         {
             var map = QueryTools.SelectFromTableWhere("_id", 
-                $"order_date = {OrderDate} " + 
-                $"and receiving_date = {ReceivingDate} " + 
-                $"and delivery_cost = {DeliveryCost}" + 
-                $"and manufacturing_cost = {ManufacturingCost}" +
+                $"order_date = '{OrderDate}' " + 
+                $"and receiving_date = '{ReceivingDate}' " + 
+                $"and delivery_cost = {DeliveryCost.ToString().Replace(",", ".")} " + 
+                $"and manufacturing_cost = {ManufacturingCost.ToString().Replace(",", ".")} " +
                 $"and components_count = {ComponentsCount}", 
-                "receiving_invoices", connection);
+                Constants.DatabaseTable.ReceivingInvoicesTable, connection)[0];
             
-            return Convert.ToInt32(map[0]["_id"]);
+            return int.Parse(map["_id"].ToString());
         }
 
         public void SetIdFromDataBase(NpgsqlConnection connection)
@@ -71,6 +74,32 @@ namespace FurnitureCompanyApp
                 Convert.ToInt32(map["components_count"]),
                 Convert.ToInt32(map["_id"])
                 );
+        }
+    }
+
+    public class AssemblyInvoice : Invoice
+    {
+        public int SchemeId { get; set; }
+        public double AssemblyPrice { get; set; }
+        public string AssemblyDate { get; set; }
+
+        public AssemblyInvoice(int schemeId, double assemblyPrice, string assemblyDate, int id = -1) : base(id)
+        {
+            SchemeId = schemeId;
+            AssemblyPrice = assemblyPrice;
+            AssemblyDate = assemblyDate;
+        }
+        
+        public static AssemblyInvoice GetInvoiceFromDatabase(int id, NpgsqlConnection connection)
+        {
+            var fields = string.Join(", ", Constants.DatabaseTable.ReceivingInvoicesTableFields.ToArray());
+            var map = QueryTools.SelectFromTableWhere(fields, $"invoice_id = {id}",
+                Constants.DatabaseTable.AssemblyInvoicesTable, connection)[0];
+            return new AssemblyInvoice(
+                Convert.ToInt32(map["scheme_id"]),
+                Convert.ToDouble(map["assembly_price"]),
+                (map["assembly_date"]).ToString(),
+                Convert.ToInt32(map["invoice_id"]));
         }
     }
 }

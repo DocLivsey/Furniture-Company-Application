@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Npgsql;
 
 namespace FurnitureCompanyApp
 {
@@ -20,26 +21,13 @@ namespace FurnitureCompanyApp
 
         private static void Test()
         {
-            Regex regex = new Regex(@"^[0-9]+(?:[,]\d*)?\z");
-            string test = "356,5346rjyj";
-            Console.WriteLine(regex.Matches(test).Count);
-            Console.WriteLine(regex.IsMatch(test));
-        }
-        
-        public static bool AreAllNodesExpanded(TreeView treeView)
-        {
-            foreach (TreeNode node in treeView.Nodes)
-                if (!node.IsExpanded)
-                    return false;
-            return true;
-        }
-
-        public static bool IsAnyNodeExpanded(TreeView treeView)
-        {
-            foreach (TreeNode node in treeView.Nodes)
-                if (node.IsExpanded)
-                    return true;
-            return false;
+            NpgsqlConnection connection = new NpgsqlConnection($"Server={Constants.Connection.LocalServer}; " +
+                                                               $"Port={Constants.Connection.Port}; " + 
+                                                               $"UserID={Constants.Connection.Userid}; " +
+                                                               $"Password={Constants.Connection.Password}; " +
+                                                               $"Database={Constants.Connection.DatabaseName}");
+            connection.Open();
+            QueryTools.DeleteFromTable("_id = 43", Constants.DatabaseTable.ReceivingInvoicesTable, connection);
         }
 
         private static void LaunchApp()

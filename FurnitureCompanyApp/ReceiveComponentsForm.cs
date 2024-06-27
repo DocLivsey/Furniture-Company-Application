@@ -25,7 +25,7 @@ namespace FurnitureCompanyApp
 
         private void UpdateFormSates()
         {
-            UploadFromDataBase();
+            ResetDataGridViewSource();
             UpdateComboBox();
             ValidateInput();
         }
@@ -36,28 +36,51 @@ namespace FurnitureCompanyApp
             UpdateFormSates();
             //dataGridView1.EditingControl.Enabled = false;
         }
-        
-        private void UploadFromDataBase()
+
+        private void ResetDataGridViewSource()
         {
-            string sqlQuery = "Select * From Receiving_Invoices " +
-                              "join components_warehouse wh on wh._id = (" +
-                              "SELECT ic.component_id from invoices_for_components ic " +
-                              "where receiving_invoices._id = ic.invoice_id)";
-            NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(sqlQuery, Connection);
-            Set.Reset(); dataAdapter.Fill(Set);
-            Table = Set.Tables[0];
-            dataGridView1.DataSource = Table;
-            dataGridView1.Columns[0].HeaderText = "Invoice ID";
-            dataGridView1.Columns[1].HeaderText = "Order Date";
-            dataGridView1.Columns[2].HeaderText = "Receiving Date";
-            dataGridView1.Columns[3].HeaderText = "Delivery Cost";
-            dataGridView1.Columns[4].HeaderText = "Manufacturing Cost";
-            dataGridView1.Columns[5].HeaderText = "Components\n" + "count on receive";
-            dataGridView1.Columns[6].HeaderText = "Component ID";
-            dataGridView1.Columns[7].HeaderText = "Name";
-            dataGridView1.Columns[8].HeaderText = "Manufacture Date";
-            dataGridView1.Columns[9].HeaderText = "Amount"; 
-            StartPosition = FormStartPosition.CenterScreen;
+            DataSet temporaryDataSet = new DataSet();
+            NpgsqlDataAdapter dataAdapter = UploadFromDataBase();
+            if (dataAdapter != null)
+            {
+                temporaryDataSet.Reset();
+                dataAdapter.Fill(temporaryDataSet);
+                if (!temporaryDataSet.Equals(Set))
+                {
+                    Set.Reset(); dataAdapter.Fill(Set);
+                    Table = Set.Tables[0];
+                    dataGridView1.DataSource = Table;
+                    dataGridView1.Columns[0].HeaderText = "Invoice ID";
+                    dataGridView1.Columns[1].HeaderText = "Order Date";
+                    dataGridView1.Columns[2].HeaderText = "Receiving Date";
+                    dataGridView1.Columns[3].HeaderText = "Delivery Cost";
+                    dataGridView1.Columns[4].HeaderText = "Manufacturing Cost";
+                    dataGridView1.Columns[5].HeaderText = "Components\n" + "count on receive";
+                    dataGridView1.Columns[6].HeaderText = "Component ID";
+                    dataGridView1.Columns[7].HeaderText = "Name";
+                    dataGridView1.Columns[8].HeaderText = "Manufacture Date";
+                    dataGridView1.Columns[9].HeaderText = "Amount";
+                }
+            }
+        }
+        
+        private NpgsqlDataAdapter UploadFromDataBase()
+        {
+            try
+            {
+                string sqlQuery = "Select * From Receiving_Invoices " +
+                                  "join components_warehouse wh on wh._id = (" +
+                                  "SELECT ic._component_id from invoices_for_components ic " +
+                                  "where receiving_invoices._id = ic.invoice_id)";
+                NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(sqlQuery, Connection);
+                return dataAdapter;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"exception: {e}");
+                Console.WriteLine($"Message: {e.Message}");
+                return null;
+            }
         }
         
         private void ValidateInput()
@@ -77,13 +100,7 @@ namespace FurnitureCompanyApp
 
         private void SetToolTip(Control box, string text)
         {
-            ToolTip toolTip = new ToolTip();
-            toolTip.Active = true;
-            toolTip.AutoPopDelay = 4000;
-            toolTip.InitialDelay = 600;
-            toolTip.IsBalloon = true;
-            toolTip.ToolTipIcon = ToolTipIcon.Error;
-            toolTip.SetToolTip(box, text);
+            Session.FormsAction.SetErrorToolTip(box, text);
         }
         
         private void button1_Click(object sender, EventArgs e)
@@ -104,23 +121,21 @@ namespace FurnitureCompanyApp
                 double delivery = double.Parse(textBox4.Text);
                 
                 string componentsName = textBox1.Text;
-                string orderDate = dateTimePicker1.Text;
-                string receiveDate = dateTimePicker2.Text;
+                string orderDate = dateTimePicker1.Value.Date.ToString();
+                string receiveDate = dateTimePicker2.Value.Date.ToString();
                 
                 ReceiveInvoice invoice = new ReceiveInvoice(
                     orderDate, receiveDate, delivery, manufacturing, count, invoiceId);
-                InvoicesQuery.InsertIntoReceivingTable(invoice, Connection);
+                InvoicesQuery.InsertIntoReceivingTable(invoice, Connection, true);
 
                 var map = QueryTools.SelectFromTableWhere("amount", 
-                    $"_id = {componentsId}","components_warehouse", Connection);
+                    $"_id = {componentsId}", Constants.DatabaseTable.ComponentsWarehouseTable, Connection);
                 FurnitureComponent component;
                 if (map.Count > 0)
                 {
-                    foreach (var pair in map[0])
-                        Console.WriteLine($"pair = {pair}");
                     int oldAmount = Convert.ToInt32(map[0]["amount"]);
                     QueryTools.UpdateTable($"amount = {oldAmount + count}", $"_id = {componentsId}", 
-                        "components_warehouse", Connection);
+                        Constants.DatabaseTable.ComponentsWarehouseTable, Connection);
                     component = FurnitureComponent.GetComponentFromDatabase(componentsId, Connection);
                 }
                 else
@@ -164,7 +179,29 @@ namespace FurnitureCompanyApp
         
         private void button2_Click(object sender, EventArgs e)
         {
-            
+            var row = dataGridView1.SelectedRows[0];
+            if (!(row is null))
+            {
+                var fields = row.Cells;
+                var invoiceId = Convert.ToInt32(fields[0].Value);
+                var orderDate = DateTime.Parse(fields[1].Value.ToString()).Date;
+                var receivingDate = DateTime.Parse(fields[2].Value.ToString()).Date;
+                var deliveryCost = Convert.ToDouble(fields[3].Value);
+                var manufacturingCost = Convert.ToDouble(fields[4].Value);
+                var componentsCount = Convert.ToInt32(fields[5].Value);
+
+                var componentId = Convert.ToInt32(fields[6].Value);
+                var componentsName = fields[7].Value.ToString();
+                var manufactureDate = fields[8].Value.ToString();
+                var amount = Convert.ToInt32(fields[9].Value);
+                
+                ReceiveInvoice invoice = new ReceiveInvoice(orderDate.ToString(), receivingDate.ToString(),
+                    deliveryCost, manufacturingCost, componentsCount, invoiceId);
+                FurnitureComponent component = new FurnitureComponent(
+                    componentId, componentsName, manufactureDate, amount);
+                EditInvoiceForm form = new EditInvoiceForm(Connection, invoice, component, true);
+                form.Show();
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -201,45 +238,45 @@ namespace FurnitureCompanyApp
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            ValidInput = Session.ValidateBoxInput(textBox1, Session.ValidationMode.NameValidation,
+            ValidInput = Session.FormsAction.ValidateBoxInput(textBox1, Session.FormsAction.ValidationMode.NameValidation,
                 "Наименование не должно содержать пробелов");
             ValidateInput();
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            ValidInput = Session.ValidateBoxInput(textBox2, Session.ValidationMode.PriceValidation,
+            ValidInput = Session.FormsAction.ValidateBoxInput(textBox2, Session.FormsAction.ValidationMode.PriceValidation,
                 "Стоимость изготовления должна быть целым числом или дестяичной дробью");
             ValidateInput();
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-            ValidInput = Session.ValidateBoxInput(
-                textBox3, Session.ValidationMode.IdValidation,
+            ValidInput = Session.FormsAction.ValidateBoxInput(
+                textBox3, Session.FormsAction.ValidationMode.IdValidation,
                 "количество должно быть целым числом");
             ValidateInput();
         }
 
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
-            ValidInput = Session.ValidateBoxInput(
-                textBox4, Session.ValidationMode.PriceValidation,
+            ValidInput = Session.FormsAction.ValidateBoxInput(
+                textBox4, Session.FormsAction.ValidationMode.PriceValidation,
                 "Стоимость доставки должна быть целым числом или дестяичной дробью");
             ValidateInput();
         }
 
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
-            ValidInput = Session.ValidateBoxInput(
-                comboBox1, Session.ValidationMode.IdValidation,
+            ValidInput = Session.FormsAction.ValidateBoxInput(
+                comboBox1, Session.FormsAction.ValidationMode.IdValidation,
                 "Код комплектующего должен быть целым числом");
             ValidateInput();
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
-            ValidInput = Session.ValidateBoxInput(textBox5, Session.ValidationMode.IdValidation,
+            ValidInput = Session.FormsAction.ValidateBoxInput(textBox5, Session.FormsAction.ValidationMode.IdValidation,
                 "Код накладной должен быть целым числом");
             ValidateInput();
         }
@@ -256,12 +293,26 @@ namespace FurnitureCompanyApp
 
         private void dataGridView1_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
-            button2.Enabled = dataGridView1.SelectedRows.Count != 0;
+            try
+            {
+                button2.Enabled = dataGridView1.SelectedRows.Count != 0;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
 
         private void ReceiveComponentsForm_Activated(object sender, EventArgs e)
         {
-            UpdateFormSates();
+            try
+            {
+                UpdateFormSates();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
         }
 
         private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
@@ -275,12 +326,19 @@ namespace FurnitureCompanyApp
 
         private void comboBox1_TextUpdate(object sender, EventArgs e)
         {
-            if (!comboBox1.Items.Contains(Convert.ToInt32(comboBox1.Text)))
-            {
-                Console.WriteLine("IF");
-                textBox1.Text = "";
-                textBox1.Enabled = true;
-            }
+            if (Session.FormsAction.ValidateBoxInput(
+                    comboBox1, Session.FormsAction.ValidationMode.IdValidation,
+                    "Код комплектующего должен быть целым числом"))
+                if (!comboBox1.Items.Contains(Convert.ToInt32(comboBox1.Text)))
+                {
+                    textBox1.Text = "";
+                    textBox1.Enabled = true;
+                }
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            
         }
     }
 }

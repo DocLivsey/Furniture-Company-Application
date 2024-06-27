@@ -34,12 +34,16 @@
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Заказать сборку");
             System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Заказы", new System.Windows.Forms.TreeNode[] { treeNode1, treeNode2, treeNode3 });
             System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Комплектующие");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Собранная мебель");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Мебель");
             System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Склад", new System.Windows.Forms.TreeNode[] { treeNode5, treeNode6 });
             System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Сборка мебели");
             System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Схемы", new System.Windows.Forms.TreeNode[] { treeNode8 });
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // treeView1
@@ -61,7 +65,7 @@
             treeNode5.Name = "Node7";
             treeNode5.Text = "Комплектующие";
             treeNode6.Name = "Node8";
-            treeNode6.Text = "Собранная мебель";
+            treeNode6.Text = "Мебель";
             treeNode7.Name = "Node2";
             treeNode7.Text = "Склад";
             treeNode8.Name = "Node9";
@@ -75,31 +79,50 @@
             this.treeView1.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterExpand);
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
-            // button1
+            // pictureBox1
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(660, 310);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(128, 128);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Open Test Form";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(504, 261);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(288, 181);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBox2.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(512, 12);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(280, 187);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox2.TabIndex = 2;
+            this.pictureBox2.TabStop = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.treeView1);
             this.Name = "MainForm";
             this.Text = "Furniture Company";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
         }
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PictureBox pictureBox2;
+
+        private System.Windows.Forms.PictureBox pictureBox1;
 
         private System.Windows.Forms.TreeView treeView1;
 
